@@ -1,0 +1,62 @@
+# -*- mode: ruby -*-
+Vagrant.configure("2") do |config|
+  
+  # variavel criada para armazenar comandos
+  #$script = <<-EOF
+  #sudo dnf install -y nginx
+  #sudo setenforce 0
+  #sudo systemctl enable --now nginx
+  #EOF
+
+  # Criar 3 hosts
+  # O que estiver dentro de server1 vale só para o mesmo, o mesmo acontece com server2 e server3
+  # Os comandos que estiverem fora valem para todas as vms 
+
+  # criar VM control
+  config.vm.define "control" do |control|
+   # SO do box
+    control.vm.box = "ubuntu/jammy64"
+   #hostname
+    control.vm.hostname = "control"
+   # Criar net privada e configurar ip estático
+    control.vm.network "private_network", ip: "10.10.10.11"
+   # NAT com encaminhamento de portas
+   #server1.vm.network "forwarded_port", guest: 80, host: 8081
+   # Executar arquivo script-alma8.sh
+   #server1.vm.provision "shell", path: "script-alma8.sh"
+  end 
+  
+  # criar VM worker01
+  config.vm.define "worker01" do |worker01|
+    worker01.vm.box = "ubuntu/jammy64"
+    worker01.vm.hostname = "worker01"
+    worker01.vm.network "private_network", ip: "10.10.10.12"
+   # Executar comandos após o inline
+   #server2.vm.provision "shell", inline: "sudo yum install -y nginx; sudo setenforce 0; sudo systemctl enable --now nginx"
+  end 
+  
+  # criar VM worker02
+  #config.vm.define "worker02" do |worker02|
+  #  worker02.vm.box = "ubuntu/jammy64"
+  #  worker02.vm.hostname = "worker02"
+  #  worker02.vm.network "private_network", ip: "10.10.10.13"
+    #server3.vm.network "forwarded_port", guest: 80, host: 8083
+    # Executar comandos da variavel $script
+    #server3.vm.provision "shell", inline: $script
+  #end 
+
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.cpus = "2"
+    vb.memory = "2048"
+  end
+
+  
+ #config.vm.synced_folder "web/", "/var/www/html/"
+
+ #config.vm.box_check_update = false
+  
+  # Ativa conexão insegura
+  config.vm.box_download_insecure=true
+
+end
