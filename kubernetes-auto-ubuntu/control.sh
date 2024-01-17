@@ -25,13 +25,11 @@ sudo kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8
 
 sudo kubeadm token create --print-join-command > /vagrant/ingress.txt
 
-su - vagrant
-
-sudo mkdir -p $HOME/.kube; sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config; sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo mkdir -p /home/vagrant/.kube; sudo cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config; sudo chown vagrant.vagrant /home/vagrant/.kube/config
 
 source <(kubectl completion bash)
 
-echo "source <(kubectl completion bash)" >> ~/.bashrc 
+echo "source <(kubectl completion bash)" >> /home/vagrant/.bashrc 
 
 #kubectl get nodes
 #kubectl get pods -n kube-system
