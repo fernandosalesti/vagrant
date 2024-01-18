@@ -1,0 +1,162 @@
+Instalar vagrant
+
+https://developer.hashicorp.com/vagrant/install?product_intent=vagrant
+
+
+Informações importantes:
+
+Os comandos do vagrant devem ser executados dentro do diretorio do projeto
+
+Pode-se especificar o hypervisor que receberá a VM com o seguinte comando:
+
+# vagrant up --provider virtualbox 
+
+
+https://developer.hashicorp.com/vagrant/docs/providers/basic_usage
+
+
+
+Versão do vagrant instalada
+
+# vagrant --version
+
+
+
+...............................
+
+Instalar plugin vbguest (opcional)
+
+# vagrant plugin install vagrant-vbguest
+
+
+Desinstalar plugin vbguest (opcional)
+
+# vagrant plugin uninstall vagrant-guest
+
+
+Mais informações
+ 
+https://github.com/dotless-de/vagrant-vbguest
+
+
+
+..................................
+Criar arquivo de configuração de host padrão
+
+# vagrant init
+
+ 
+.................
+Criar arquivo de configuração como o box configurado como "almalinux/8"
+
+# vagrant init almalinux/8
+
+
+.................
+Criar arquivo de configuração como o box configurado como "almalinux/8" e sem comentários
+
+# vagrant init -m almalinux/8
+
+
+...........
+Adicionar Box
+
+# vagrant box add centos/7
+
+...........
+Remover Box
+
+vagrant box remove centos/7
+
+...........
+Listar Box instaladas
+
+vagrant box list
+
+
+..................................
+Subir os hosts do ambiente 
+
+# vagrant up
+
+..................................
+Verificar status do host
+
+# vagrant status
+
+..................................
+Verificar configuração ssh da conexão com o host
+
+# vagrant ssh-config
+
+..................................
+Acessar o host
+
+# vagrant ssh
+
+
+..................................
+Acessar o host server1
+
+# vagrant status
+
+# vagrant ssh server1
+
+..................................
+Deslogar do host
+
+# exit
+
+..................................
+Executar comando no host server1
+
+# vagrant status
+
+# vagrant ssh server1 -c "cat /etc/*release"
+
+
+
+
+.................
+Quando quiser pausar sua máquina use 
+
+# vagrant suspend 
+# vagrant suspend server1 
+
+.................
+Para retomar o host 
+
+# vagrant resume
+
+# vagrant resume server1
+
+
+.................
+Para desligar a máquina use 
+
+# vagrant halt
+
+# vagrant halt server1
+
+.................
+Para destruir uma máquina e começar do zero use 
+
+# vagrant destroy -f
+
+# vagrant destroy -f server1
+
+
+.................
+Reiniciar o host e aplicar a configuração atual do arquivo
+
+# vagrant reload
+
+.................
+Mais informações:
+
+
+https://woliveiras.com.br/posts/configurar-vagrant/
+
+https://www.devops-sys.com.br/2018-10-07-vagrant/
+
+
