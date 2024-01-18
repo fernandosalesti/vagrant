@@ -19,7 +19,8 @@ Vagrant.configure("2") do |config|
    #hostname
     control.vm.hostname = "control"
    # Criar net privada e configurar ip estático
-    control.vm.network "private_network", ip: "10.10.10.11"
+    control.vm.network "private_network", ip: "10.10.10.11",
+    virtualbox__intnet: "mynetwork"
    # NAT com encaminhamento de portas
    #server1.vm.network "forwarded_port", guest: 80, host: 8081
    # Executar arquivo script-alma8.sh
@@ -30,7 +31,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "worker01" do |worker01|
     worker01.vm.box = "ubuntu/jammy64"
     worker01.vm.hostname = "worker01"
-    worker01.vm.network "private_network", ip: "10.10.10.12"
+    worker01.vm.network "private_network", ip: "10.10.10.12",
+    virtualbox__intnet: "mynetwork"
    # Executar comandos após o inline
    #server2.vm.provision "shell", inline: "sudo yum install -y nginx; sudo setenforce 0; sudo systemctl enable --now nginx"
   end 

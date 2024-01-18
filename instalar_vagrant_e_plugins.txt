@@ -29,7 +29,12 @@ Instalar plugin vbguest (opcional)
 # vagrant plugin install vagrant-vbguest
 
 
-Desinstalar plugin vbguest (opcional)
+Instalar plugin rdp (opcional)
+
+# vagrant plugin install vagrant-rdp
+
+
+Desinstalar um plugin (opcional)
 
 # vagrant plugin uninstall vagrant-guest
 

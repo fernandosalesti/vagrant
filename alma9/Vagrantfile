@@ -2,6 +2,8 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "almalinux/9"
   config.vm.hostname = "serverweb"
+  config.vm.network "private_network", ip: "10.10.10.212",
+   virtualbox__intnet: "mynetwork"
   config.vm.network "forwarded_port", guest: 80, host: 8081
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = "2"

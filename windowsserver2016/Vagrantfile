@@ -2,6 +2,49 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "StefanScherer/windows_2016"
+  #config.vm.box = "StefanScherer/windows_2016"
+  config.vm.communicator = "winrm"
+
+  # Admin user name and password
+  config.winrm.username = "vagrant"
+  config.winrm.password = "vagrant"
+
+  #config.vm.network "private_network", ip: "10.10.10.200",
+  # virtualbox__intnet: "mynetwork"
+
+  #config.vm.guest = :windows
+  #config.windows.halt_timeout = 15
+
+  #config.vm.network "private_network", ip: "10.10.10.200"
+  # Acesso via 127.0.0.1:53389
+  # Encaminhar rdp, ativar se necessário
+  #config.vm.network :forwarded_port, guest: 3389, host: 33389, id: "rdp", auto_correct: true
+
+  config.vm.define "server2016" do |server2016|
+      server2016.vm.box = "StefanScherer/windows_2016"
+      server2016.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+      
+      server2016.vm.network "private_network", ip: "10.10.10.200",
+       virtualbox__intnet: "mynetwork"
+
+      server2016.vm.guest = :windows
+      #server2016.vm.communicator = "winrm"
+
+      server2016.vm.provider "virtualbox" do |vb|
+        #vb.gui = true
+        vb.name = "win2016"
+        vb.cpus = "2"
+        vb.memory = "2048"
+        vb.customize ["modifyvm", :id, "--vram", 128]
+        vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+      end
+  end
+
+  #tamanho da janela
+  #config.rdp.width  = 1440 # default: 1024
+  #config.rdp.height = 900  # default: 768
+  config.windows.halt_timeout = 20
+  config.vm.synced_folder ".", "/vagrant"
   config.vm.box_download_insecure=true
 end
