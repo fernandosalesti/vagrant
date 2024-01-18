@@ -3,4 +3,5 @@
 
 Vagrant.configure("2") do |config|
   config.vm.box = "gusztavvargadr/windows-server-2022-standard"
+  config.vm.box_download_insecure=true
 end
