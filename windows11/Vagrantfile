@@ -2,6 +2,54 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "gusztavvargadr/windows-11"
+  #config.vm.box = "StefanScherer/windows_2016"
+  #config.vm.communicator = "winrm"
+
+  # Admin user name and password
+  #config.winrm.username = "vagrant"
+  #config.winrm.password = "vagrant"
+
+  #config.vm.network "private_network", ip: "10.10.10.200",
+  # virtualbox__intnet: "mynetwork"
+
+  #config.vm.guest = :windows
+  #config.windows.halt_timeout = 15
+
+  #config.vm.network "private_network", ip: "10.10.10.200"
+  # Acesso via 127.0.0.1:53389
+  # Encaminhar rdp, ativar se necessário
+  #config.vm.network :forwarded_port, guest: 3389, host: 33389, id: "rdp", auto_correct: true
+
+  config.vm.define "win11" do |win11|
+      win11.vm.box = "gusztavvargadr/windows-11"
+  #    win11.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+      
+      win11.vm.network "private_network", ip: "10.10.10.200"
+
+      win11.vm.guest = :windows
+
+      win11.vm.communicator = "winrm"
+
+      # Admin user name and password
+      win11.winrm.username = "vagrant"
+      win11.winrm.password = "vagrant"
+
+      win11.vm.provider "virtualbox" do |vb|
+        #vb.gui = true
+        vb.name = "win11"
+        vb.cpus = "1"
+        vb.memory = "2048"
+        vb.customize ["modifyvm", :id, "--vram", 128]
+        vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+      end
+
+      win11.windows.halt_timeout = 20
+      win11.vm.synced_folder ".", "/vagrant"
+
+  end
+  
+  #config.windows.halt_timeout = 20
+  #config.vm.synced_folder ".", "/vagrant"
   config.vm.box_download_insecure=true
 end

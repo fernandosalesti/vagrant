@@ -30,8 +30,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "worker01" do |worker01|
     worker01.vm.box = "almalinux/8"
     worker01.vm.hostname = "worker01"
-    worker01.vm.network "private_network", ip: "10.10.10.12",
-     virtualbox__intnet: "mynetwork"
+    worker01.vm.network "private_network", ip: "10.10.10.12"
    # Executar comandos após o inline
    #server2.vm.provision "shell", inline: "sudo yum install -y nginx; sudo setenforce 0; sudo systemctl enable --now nginx"
   end 

@@ -19,8 +19,7 @@ Vagrant.configure("2") do |config|
    #hostname
    server1.vm.hostname = "server1"
    # Criar net privada e configurar ip estático
-   server1.vm.network "private_network", ip: "10.10.10.11",
-    virtualbox__intnet: "mynetwork"
+   server1.vm.network "private_network", ip: "10.10.10.11"
    # NAT com encaminhamento de portas
    server1.vm.network "forwarded_port", guest: 80, host: 8081
    # Executar arquivo script-alma8.sh
@@ -31,8 +30,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "server2" do |server2|
    server2.vm.box = "almalinux/9"
    server2.vm.hostname = "server2"
-   server2.vm.network "private_network", ip: "10.10.10.12",
-    virtualbox__intnet: "mynetwork"
+   server2.vm.network "private_network", ip: "10.10.10.12"
    # Executar comandos após o inline
    server2.vm.provision "shell", inline: "sudo yum install -y nginx; sudo setenforce 0; sudo systemctl enable --now nginx"
   end 
@@ -41,8 +39,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "server3" do |server3|
     server3.vm.box = "almalinux/9"
     server3.vm.hostname = "server3"
-    server3.vm.network "private_network", ip: "10.10.10.13",
-     virtualbox__intnet: "mynetwork"
+    server3.vm.network "private_network", ip: "10.10.10.13"
     server3.vm.network "forwarded_port", guest: 80, host: 8083
     # Executar comandos da variavel $script
     server3.vm.provision "shell", inline: $script
@@ -51,7 +48,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = "1"
-    vb.memory = "2048"
+    vb.memory = "1024"
   end
 
   

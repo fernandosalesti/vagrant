@@ -1,0 +1,54 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  #config.vm.box = "StefanScherer/windows_2016"
+  #config.vm.communicator = "winrm"
+
+  # Admin user name and password
+  #config.winrm.username = "vagrant"
+  #config.winrm.password = "vagrant"
+
+  #config.vm.network "private_network", ip: "10.10.10.200",
+  # virtualbox__intnet: "mynetwork"
+
+  #config.vm.guest = :windows
+  #config.windows.halt_timeout = 15
+
+  #config.vm.network "private_network", ip: "10.10.10.200"
+  # Acesso via 127.0.0.1:53389
+  # Encaminhar rdp, ativar se necessário
+  #config.vm.network :forwarded_port, guest: 3389, host: 33389, id: "rdp", auto_correct: true
+
+  config.vm.define "server2022" do |server2022|
+      server2022.vm.box = "gusztavvargadr/windows-server-2022-standard"
+      server2022.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+      
+      server2022.vm.network "private_network", ip: "10.10.10.200"
+
+      server2022.vm.communicator = "winrm"
+
+      server2022.winrm.username = "vagrant"
+      server2022.winrm.password = "vagrant"
+
+      #server2022.vm.guest = :windows
+      #server2016.vm.communicator = "winrm"
+
+      server2022.vm.provider "virtualbox" do |vb|
+        #vb.gui = true
+        vb.name = "server2022"
+        vb.cpus = "2"
+        vb.memory = "3098"
+        #vb.customize ["modifyvm", :id, "--vram", 128]
+        #vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        #vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+      end
+      server2022.windows.halt_timeout = 20
+      server2022.vm.synced_folder ".", "/vagrant"
+  
+  end
+  
+  #config.windows.halt_timeout = 20
+  #config.vm.synced_folder ".", "/vagrant"
+  config.vm.box_download_insecure=true
+end

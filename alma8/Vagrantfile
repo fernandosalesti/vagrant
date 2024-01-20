@@ -1,13 +1,12 @@
 # -*- mode: ruby -*-
 Vagrant.configure("2") do |config|
   config.vm.box = "almalinux/8"
-  config.vm.hostname = "serverweb"
-  config.vm.network "private_network", ip: "10.10.10.211",
-   virtualbox__intnet: "mynetwork"
+  config.vm.hostname = "alma8"
+  config.vm.network "private_network", ip: "10.10.10.211"
   config.vm.network "forwarded_port", guest: 80, host: 8081
   config.vm.provider "virtualbox" do |vb|
-    vb.cpus = "2"
-    vb.memory = "2048"
+    vb.cpus = "1"
+    vb.memory = "1024"
   end
 
   config.vm.provision "shell", path: "script.sh"

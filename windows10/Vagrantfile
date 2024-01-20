@@ -2,37 +2,54 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-
-  config.vm.box = "gusztavvargadr/windows-10"
-  config.vm.communicator = "winrm"
+  #config.vm.box = "StefanScherer/windows_2016"
+  #config.vm.communicator = "winrm"
 
   # Admin user name and password
-  config.winrm.username = "vagrant"
-  config.winrm.password = "vagrant"
+  #config.winrm.username = "vagrant"
+  #config.winrm.password = "vagrant"
 
-  config.vm.guest = :windows
+  #config.vm.network "private_network", ip: "10.10.10.200",
+  # virtualbox__intnet: "mynetwork"0
+
+  #config.vm.guest = :windows
   #config.windows.halt_timeout = 15
 
-  config.vm.network "private_network", ip: "10.10.10.210",
-   virtualbox__intnet: "mynetwork"
+  #config.vm.network "private_network", ip: "10.10.10.200"
   # Acesso via 127.0.0.1:53389
   # Encaminhar rdp, ativar se necessário
-  #config.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+  #config.vm.network :forwarded_port, guest: 3389, host: 33389, id: "rdp", auto_correct: true
 
-  config.vm.provider "virtualbox" do |vb|
-      #vb.gui = true
-      vb.name = "win10"
-      vb.customize ["modifyvm", :id, "--memory", 2048]
-      vb.customize ["modifyvm", :id, "--cpus", 2]
-      vb.customize ["modifyvm", :id, "--vram", 128]
-      vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
-      vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+  config.vm.define "win10" do |win10|
+      win10.vm.box = "gusztavvargadr/windows-10"
+     # win10.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+      
+      win10.vm.network "private_network", ip: "10.10.10.200"
+
+      win10.vm.guest = :windows
+      win10.vm.communicator = "winrm"
+
+      # Admin user name and password
+      win10.winrm.username = "vagrant"
+      win10.winrm.password = "vagrant"
+
+
+      win10.vm.provider "virtualbox" do |vb|
+        #vb.gui = true
+        vb.name = "win10"
+        vb.cpus = "1"
+        vb.memory = "2048"
+        vb.customize ["modifyvm", :id, "--vram", 128]
+        vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+      end
+
+      win10.windows.halt_timeout = 20
+      win10.vm.synced_folder ".", "/vagrant"
+
   end
-
-  #tamanho da janela
-  #config.rdp.width  = 1440 # default: 1024
-  #config.rdp.height = 900  # default: 768
-  config.windows.halt_timeout = 20
-  config.vm.synced_folder ".", "/vagrant"
+  
+  #config.windows.halt_timeout = 20
+  #config.vm.synced_folder ".", "/vagrant"
   config.vm.box_download_insecure=true
 end
