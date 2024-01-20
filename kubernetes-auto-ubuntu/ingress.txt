@@ -1,1 +1,1 @@
-kubeadm join 10.10.10.100:6443 --token ofjey1.o9wkz76rvs4hwc8w --discovery-token-ca-cert-hash sha256:8d7108302687b8b1fe18e1105ab17f79261795aec349e69aa32cf28074c34367 
+
