@@ -31,5 +31,6 @@ source <(kubectl completion bash)
 
 echo "source <(kubectl completion bash)" >> /home/vagrant/.bashrc 
 
+# kubectl version
 # kubectl get nodes
 # kubectl get pods -n kube-system

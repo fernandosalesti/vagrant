@@ -3,7 +3,7 @@
 
 machines = {
   "control" => {"memory" => "2048", "cpu" => "2", "ip" => "100", "image" => "ubuntu/jammy64"},
-  "worker01" => {"memory" => "2048", "cpu" => "2", "ip" => "101", "image" => "ubuntu/jammy64"},
+  "worker01" => {"memory" => "2048", "cpu" => "2", "ip" => "101", "image" => "ubuntu/jammy64"}
   }
 
 Vagrant.configure("2") do |config|
