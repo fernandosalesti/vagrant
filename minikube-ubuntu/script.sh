@@ -18,8 +18,8 @@ echo "source <(kubectl completion bash)" >> .bashrc
 
 bash .bashrc
 
-# sudo echo 'alias kubectl="minikube kubectl --"' >> .bashrc
-# sudo .bashrc
+echo 'source <(kubectl completion bash)' >> .bashrc
+source .bashrc
 # Alguns comandos
 # minikube version
 # minikube start --driver=docker
