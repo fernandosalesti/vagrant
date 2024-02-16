@@ -122,11 +122,23 @@ fi
 # Ativar https 
 
 sudo dnf install -y mod_ssl openssl
-# sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/zabbix.key -out /etc/ssl/zabbix.crt
+
+
+# Copiar chave, certificado e arquivo de configuração do zabbix para https 
 
 sudo cp /vagrant/tls/zabbix-tls.conf /etc/httpd/conf.d/
 sudo cp /vagrant/tls/zabbix.crt /etc/ssl/
 sudo cp /vagrant/tls/zabbix.key /etc/ssl/
+
+
+
+# Caso os comandos acima não funcionem
+# Gere a chave e certificados com o comandos abaixo:
+
+# sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/zabbix.key -out /etc/ssl/zabbix.crt
+
+# Copie o arquivo manualmente para /vagrant/tls/zabbix-tls.conf para /etc/httpd/conf.d/
+
+# Reinicie o apache
+
 sudo systemctl restart httpd
-
-
