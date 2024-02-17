@@ -1,0 +1,38 @@
+Termine a configuração via navegador no endereço abaixo:
+
+http://localhost:8080/zabbix
+
+
+Selecione/Digite os seguintes parâmetros
+
+Default language: Portuguese (pt_BR)
+# ou
+Default language: English (en_US) 
+
+
+
+Configure DB connection
+
+Database type: MySQL
+Database host: localhost
+Database port: 0
+Database name: zabbixdb
+Store credentials in: Plain text
+User: zabbixuser
+Password: zabbixsenha
+
+
+Settings
+
+Zabbix server name: zabbix-server-test  # Nome a sua escolha
+
+Default time zone: (UTC-3:00) America/Sao_Paulo
+
+Logue com os user e senha padrão
+
+User: Admin
+senha: zabbix
+
+
+Exemplo de Configuração dos agent
+https://blog.zabbix.com/zabbix-agent-active-vs-passive/9207/

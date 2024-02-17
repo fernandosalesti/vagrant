@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+Vagrant.configure("2") do |config|
+  config.vm.box = "almalinux/8"
+  config.vm.hostname = "zabbix-server"
+  config.vm.network "private_network", ip: "10.10.10.200"
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 443, host: 8443
+  config.vm.provider "virtualbox" do |vb|
+    vb.cpus = "1"
+    vb.memory = "2048"
+  end
+
+  config.vm.provision "shell", path: "installzabbix.sh"
+  #config.vm.synced_folder "web/", "/var/www/html/"
+
+ # config.vm.box_check_update = false
+  config.vm.box_download_insecure=true
+
+end
