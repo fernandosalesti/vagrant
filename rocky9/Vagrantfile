@@ -1,16 +1,16 @@
 # -*- mode: ruby -*-
 Vagrant.configure("2") do |config|
-  config.vm.box = "eurolinux-vagrant/oracle-linux-8"
-  config.vm.hostname = "oracle8"
-  config.vm.network "private_network", ip: "10.10.10.218"
-  #config.vm.network "forwarded_port", guest: 80, host: 8081
+  config.vm.box = "eurolinux-vagrant/rocky-9"
+  config.vm.hostname = "rocky9"
+  config.vm.network "private_network", ip: "10.10.10.229"
+  config.vm.network "forwarded_port", guest: 80, host: 8089
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = "1"
     vb.memory = "1024"
   end
 
   #config.vm.provision "shell", path: "script.sh"
-  #config.vm.synced_folder "web/", "/var/www/html/"
+ # config.vm.synced_folder "web/", "/var/www/html/"
 
  # config.vm.box_check_update = false
   config.vm.box_download_insecure=true
