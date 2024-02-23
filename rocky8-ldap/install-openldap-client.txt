@@ -1,0 +1,90 @@
+Instalação Openldap no Rocky8 
+
+
+# vi /etc/hosts
+
+10.10.10.11 ldapmaster ldapmaster.example.local
+10.10.10.12 client01 client01.example.local
+
+
+
+Habilitar repo e instalar openldap
+
+
+# dnf -y install openldap-clients sssd sssd-ldap oddjob-mkhomedir openssl-perl
+
+# mkdir -p /etc/openldap/cacerts
+
+
+# scp vagrant@ldapmaster.example.local:/etc/openldap/certs/ca.cert.pem /etc/openldap/cacerts
+
+
+Configurar sssd
+
+# vi /etc/sssd/sssd.conf
+
+[sssd]
+config_file_version = 2
+services = nss, pam,autofs
+domains = default
+
+[nss]
+homedir_substring = /home
+
+[pam]
+
+
+[domain/default]
+id_provider = ldap
+autofs_provider = ldap
+auth_provider = ldap
+chpass_provider = ldap
+ldap_uri = ldaps://ldapmaster.example.local:636
+ldap_chpass_uri = ldaps://ldapmaster.example.local:636
+ldap_search_base = dc=example,dc=local
+ldap_id_use_start_tls = False
+ldap_tls_cacertdir = /etc/openldap/cacerts
+cache_credentials = True
+ldap_tls_reqcert = demand
+entry_cache_timeout = 600
+ldap_network_timeout = 3
+ldap_connection_expire_timeout = 60
+
+
+
+Configurar permissão sssd
+
+# chmod 600 /etc/sssd/sssd.conf
+
+# chown root:root /etc/sssd/sssd.conf
+
+
+Configurar ldap.conf
+
+# vi /etc/openldap/ldap.conf
+
+BASE    dc=example,dc=local
+URI     ldap://ldapmaster.example.local
+TLS_CACERT      /etc/openldap/cacerts/ca.cert.pem
+TLS_CACERTDIR /etc/openldap/cacerts
+
+
+Refresh certs
+
+# openssl rehash /etc/openldap/cacerts
+
+
+Configure mkhomedir to auto create home directories
+
+# authselect select sssd with-mkhomedir --force
+
+
+Ativar serviços
+
+# systemctl enable sssd.service --now
+# systemctl enable oddjobd.service --now
+
+
+Verificar
+
+# id testuser
