@@ -1,0 +1,295 @@
+Instalação Openldap no Rocky8
+
+
+# vi /etc/hosts
+
+10.10.10.11 ldapmaster ldapmaster.example.local
+
+
+
+Habilitar repo e instalar openldap
+
+# dnf repolist --all
+
+# dnf config-manager --set-enabled devel
+
+# dnf install -y openldap-servers openldap-clients
+
+# rpm -qa | grep ldap
+
+
+Configurar firewall
+
+
+# systemctl enable --now firewalld; firewall-cmd --permanent --add-port=22/tcp; firewall-cmd --reload
+
+
+# firewall-cmd --permanent --add-port=636/tcp; firewall-cmd --permanent --add-port=389/tcp; firewall-cmd --reload
+
+
+Copiar arquivo de configuração de exemplo e iniciar slapd
+
+# cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG 
+
+# chown ldap. /var/lib/ldap/DB_CONFIG 
+
+# systemctl enable --now slapd
+
+# systemctl status slapd
+
+
+
+Gerar senha
+
+# slappasswd
+
+exemplo:
+senharoot
+{SSHA}RPRE0LVMFNiK59Ye+YATo1ar9u9BJkfb
+
+
+Criar senha de root
+
+# vi changerootpw.ldif
+
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+add: olcRootPW
+olcRootPW: {SSHA}RPRE0LVMFNiK59Ye+YATo1ar9u9BJkfb
+
+
+
+# ldapadd -Y EXTERNAL -H ldapi:/// -f changerootpw.ldif
+
+
+
+
+Importar basic Schemas
+
+# ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+
+# ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif 
+
+# ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+
+
+
+Atualizar nome do dominio e senha no ldap
+
+
+# vi setdomainname.ldif
+
+dn: olcDatabase={1}monitor,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth"
+  read by dn.base="cn=Manager,dc=example,dc=local" read by * none
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: dc=example,dc=local
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcRootDN
+olcRootDN: cn=Manager,dc=example,dc=local
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+add: olcRootPW
+olcRootPW: {SSHA}RPRE0LVMFNiK59Ye+YATo1ar9u9BJkfb
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+add: olcAccess
+olcAccess: {0}to attrs=userPassword,shadowLastChange by
+  dn="cn=Manager,dc=example,dc=local" write by anonymous auth by self write by * none
+olcAccess: {1}to dn.base="" by * read
+olcAccess: {2}to * by dn="cn=Manager,dc=example,dc=local" write by * read
+
+
+# ldapmodify -Y EXTERNAL -H ldapi:/// -f setdomainname.ldif
+
+# ls -ld /etc/openldap/slapd.d/cn\=config/*
+
+
+
+Criar OU
+
+# vi adddomain.ldif
+
+dn: dc=example,dc=local
+objectClass: top
+objectClass: dcObject
+objectclass: organization
+o: My example Organisation
+dc: example
+
+dn: cn=Manager,dc=example,dc=local
+objectClass: organizationalRole
+cn: Manager
+description: OpenLDAP Manager
+
+dn: ou=People,dc=example,dc=local
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Group,dc=example,dc=local
+objectClass: organizationalUnit
+ou: Group
+
+
+# ldapadd -x -D cn=Manager,dc=example,dc=local -W -f adddomain.ldif
+
+
+
+Adicionar usuarios e grupos
+
+# slappasswd
+
+exemplo:
+senhausuario
+{SSHA}sqnRjuy/ipzu4peZJB8mAhfGx3w1gZSE
+
+
+# vi addtestuser.ldif
+
+dn: uid=testuser,ou=People,dc=example,dc=local
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: testuser
+sn: temp
+userPassword: {SSHA}sqnRjuy/ipzu4peZJB8mAhfGx3w1gZSE 
+loginShell: /bin/bash
+uidNumber: 2000
+gidNumber: 2000
+homeDirectory: /home/testuser
+shadowLastChange: 0
+shadowMax: 0
+shadowWarning: 0
+
+dn: cn=grouptestuser,ou=Group,dc=example,dc=local
+objectClass: posixGroup
+cn: grouptestuser
+gidNumber: 2000
+memberUid: testuser
+
+
+# ldapadd -x -D cn=Manager,dc=example,dc=local -W -f addtestuser.ldif 
+
+# ldapsearch -x cn=testuser -b dc=example,dc=local
+
+
+Deletar usuário e grupos
+
+# ldapdelete -x -W -D 'cn=Manager,dc=example,dc=local' "uid=testuser,ou=People,dc=example,dc=local"
+
+# ldapdelete -x -W -D 'cn=Manager,dc=example,dc=local' "cn=grouptestuser,ou=Group,dc=example,dc=local" 
+
+
+
+Testar configuração
+
+[root@ldapmaster ~]# slaptest -u
+config file testing succeeded
+
+
+# ss -tunlp | grep slapd
+
+
+
+
+
+ATIVAR LDAPS
+
+
+# cd /etc/openldap/certs
+
+
+
+Create key for CA
+
+#  openssl genrsa -des3 -out ca.key 4096
+
+Remove password from ca.key
+
+# openssl rsa -in ca.key -out ca.key 
+
+Create CA certificate using ca.key
+
+# openssl req -new -x509 -days 3650 -key ca.key -out ca.cert.pem
+
+Verify
+
+# openssl x509 -noout -text -in ca.cert.pem | head
+
+
+Generate a server key
+
+# openssl genrsa -des3 -out ldapmaster.example.local.key 4096
+
+Remove password from the key
+
+# openssl rsa -in ldapmaster.example.local.key -out ldapmaster.example.local.key
+
+Generate request for signing (CSR)
+
+# openssl req -new -key ldapmaster.example.local.key -out ldapmaster.example.local.csr
+
+Sign a certificate with CA
+
+# openssl x509 -req -days 3650 -in ldapmaster.example.local.csr -CA ca.cert.pem -CAkey ca.key -CAcreateserial -out ldapmaster.example.local.crt
+
+
+
+Edite o usuário do diretório
+
+# chown -R ldap. /etc/openldap/certs/
+
+# ls -l /etc/openldap/certs/
+
+
+Importe para ldap
+
+# cd ~
+
+# vi importCAcert.ldif
+
+dn: cn=config
+changetype: modify
+replace: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/openldap/certs/ca.cert.pem
+-
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/openldap/certs/ldapmaster.example.local.crt
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/openldap/certs/ldapmaster.example.local.key
+
+
+# ldapmodify -Y EXTERNAL -H ldapi:/// -f  importCAcert.ldif
+
+
+
+
+Teste as configurações
+
+# cat /etc/openldap/slapd.d/cn\=config.ldif
+
+# echo | openssl s_client -connect ldapmaster.example.local:636 -showcerts
+
+# ldapsearch -x -b dc=example,dc=local -ZZ | head
+
+
+Corrigindo erro de certificado auto-assinado conforme abaixo:
+
+ldap_start_tls: Connect error (-11)
+        additional info: error:1416F086:SSL routines:tls_process_server_certificate:certificate verify failed (self signed certificate in certificate chain)
+
+
+
+# echo "TLS_REQCERT never" >> /etc/openldap/ldap.conf
+
+# ldapsearch -x -b dc=example,dc=local -ZZ | head

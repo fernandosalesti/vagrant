@@ -138,7 +138,7 @@ sudo systemctl enable zabbix-server zabbix-agent httpd php-fpm
 # Caso os comandos acima não funcionem
 # Gere a chave e certificados com o comandos abaixo:
 
-# sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/zabbix.key -out /etc/ssl/zabbix.crt
+# sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/oci.key -out /etc/ssl/oci.crt
 
 # Copie o arquivo manualmente para /vagrant/tls/zabbix-tls.conf para /etc/httpd/conf.d/
 

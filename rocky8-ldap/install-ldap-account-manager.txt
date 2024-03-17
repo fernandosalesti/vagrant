@@ -1,0 +1,121 @@
+Instalar
+
+# dnf module list php
+# dnf module reset php
+# dnf module enable php:8.0
+
+# dnf install httpd httpd-tools mod_ssl openssl php php-fpm php-mysqlnd php-opcache php-gd php-xml php-mbstring php-json php-gmp php-zip php-ldap -y
+
+# systemctl enable --now php-fpm httpd
+
+# setsebool -P httpd_execmem 1
+
+# firewall-cmd --permanent --add-port=80/tcp; firewall-cmd --permanent --add-port=443/tcp; firewall-cmd --reload
+
+# systemctl restart httpd
+
+Verificar versão Atual em:
+https://www.ldap-account-manager.org/lamcms/releases
+
+
+# wget https://github.com/LDAPAccountManager/lam/releases/download/8.6/ldap-account-manager-8.6-0.fedora.1.noarch.rpm
+
+
+# dnf -y localinstall ldap-account-manager-*.rpm
+
+# rpm -qa |grep ldap-account-manager
+
+
+
+https://computingforgeeks.com/install-ldap-account-manager-on-centos/
+
+
+# openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/lam.ldapmaster.example.local.key -out /etc/ssl/lam.ldapmaster.example.local.crt
+
+# vi /etc/httpd/conf.d/lam-https.conf
+
+<VirtualHost *:80>
+  ServerName 10.10.10.11
+  Redirect permanent /lam https://localhost:8443/lam
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName 10.10.10.11
+  Alias /lam /usr/share/ldap-account-manager
+  SSLEngine on
+  SSLCertificateFile /etc/ssl/lam.ldapmaster.example.local.crt
+  SSLCertificateKeyFile /etc/ssl/lam.ldapmaster.example.local.key
+</VirtualHost>
+
+
+# systemctl restart httpd php-fpm
+
+
+CONFIGURAÇÂO WEB
+
+http://127.0.0.1:8080/lam/
+
+
+LAM configuration > Edit Server Profiles
+
+Profile name : lam
+Password: lam
+
+
+General settings
+    Server settings
+
+        Server address: ldap://localhost:389
+        Active TLS: yes
+        Login method: Fixed list
+        List of valid users: 
+            cn=Manager,dc=example,dc=local
+    
+    Tree suffix
+           dc=example,dc=local
+
+    
+
+    Profile password
+           senhalam
+           senhalam
+
+
+
+Account types
+    Active account types
+    Users
+        LDAP suffix: 
+            ou=People,dc=example,dc=local
+
+    Groups
+        LDAP suffix:
+            ou=Group,dc=example,dc=local
+
+
+Modules
+    Users 
+        Selected Modules
+            Personal
+            Unix
+            Shadow
+
+    Groups
+        Selected Modules
+            Unix
+
+
+Salve
+
+
+Após criar o usuário "useradmin" no sistema, siga os passos:
+
+LAM configuration > Edit Server Profiles
+
+General settings
+    Server settings
+
+        List of valid users:
+            cn=useradmin,ou=People,dc=example,dc=local
+
+
