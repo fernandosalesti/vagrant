@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+Vagrant.configure("2") do |config|
+  config.vm.box = "eurolinux-vagrant/rocky-9"
+  config.vm.hostname = "rocky9"
+  config.vm.network "private_network", ip: "10.10.10.229"
+  config.vm.network "forwarded_port", guest: 80, host: 8000
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 9080, host: 9080
+  config.vm.network "forwarded_port", guest: 7080, host: 7080
+  config.vm.network "forwarded_port", guest: 443, host: 8443
+  config.vm.provider "virtualbox" do |vb|
+    vb.cpus = "2"
+    vb.memory = "2048"
+  end
+
+  #config.vm.provision "shell", path: "script.sh"
+ # config.vm.synced_folder "web/", "/var/www/html/"
+
+ # config.vm.box_check_update = false
+  config.vm.box_download_insecure=true
+
+end
+
+
+
