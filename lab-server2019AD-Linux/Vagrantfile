@@ -1,0 +1,104 @@
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  #config.vm.box = "StefanScherer/windows_2016"
+  #config.vm.communicator = "winrm"
+
+  # Admin user name and password
+  #config.winrm.username = "vagrant"
+  #config.winrm.password = "vagrant"
+
+  #config.vm.network "private_network", ip: "10.10.10.200",
+  # virtualbox__intnet: "mynetwork"
+
+  #config.vm.guest = :windows
+  #config.windows.halt_timeout = 15
+
+  #config.vm.network "private_network", ip: "10.10.10.200"
+  # Acesso via 127.0.0.1:53389
+  # Encaminhar rdp, ativar se necessário
+  #config.vm.network :forwarded_port, guest: 3389, host: 33389, id: "rdp", auto_correct: true
+
+  config.vm.define "server2019" do |server2019|
+      server2019.vm.box = "gusztavvargadr/windows-server-2019-standard"
+      #server2019.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+      
+      server2019.vm.network "private_network", ip: "10.10.10.200"
+
+      #server2019.vm.guest = :windows
+      #server2016.vm.communicator = "winrm"
+      server2019.vm.communicator = "winrm"
+
+      server2019.winrm.username = "vagrant"
+      server2019.winrm.password = "vagrant"
+
+      server2019.vm.provider "virtualbox" do |vb|
+        #vb.gui = true
+        vb.name = "server2019"
+        vb.cpus = "2"
+        vb.memory = "2048"
+        #vb.customize ["modifyvm", :id, "--vram", 128]
+        #vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        #vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+      end
+
+      server2019.windows.halt_timeout = 20
+#      server2019.vm.synced_folder ".", "/vagrant"
+    
+
+    end
+
+    config.vm.define "oracle1" do |oracle1|
+      oracle1.vm.box = "eurolinux-vagrant/oracle-linux-9"
+      oracle1.vm.hostname = "oracle1"
+      oracle1.vm.network "private_network", ip: "10.10.10.201"
+      #config.vm.network "forwarded_port", guest: 80, host: 8081
+      config.vm.provider "virtualbox" do |vb|
+        vb.cpus = "1"
+        vb.memory = "1024"
+      end
+    end
+
+
+    config.vm.define "oracle2" do |oracle2|
+      oracle2.vm.box = "eurolinux-vagrant/oracle-linux-9"
+      oracle2.vm.hostname = "oracle2"
+      oracle2.vm.network "private_network", ip: "10.10.10.202"
+      #config.vm.network "forwarded_port", guest: 80, host: 8081
+      config.vm.provider "virtualbox" do |vb|
+        vb.cpus = "1"
+        vb.memory = "1024"
+      end
+    end
+
+
+
+    config.vm.define "oracle3" do |oracle3|
+      oracle3.vm.box = "eurolinux-vagrant/oracle-linux-8"
+      oracle3.vm.hostname = "oracle3"
+      oracle3.vm.network "private_network", ip: "10.10.10.203"
+      #config.vm.network "forwarded_port", guest: 80, host: 8081
+      config.vm.provider "virtualbox" do |vb|
+        vb.cpus = "1"
+        vb.memory = "1024"
+      end
+    end
+
+
+    config.vm.define "oracle4" do |oracle4|
+      oracle4.vm.box = "eurolinux-vagrant/oracle-linux-7"
+      oracle4.vm.hostname = "oracle4"
+      oracle4.vm.network "private_network", ip: "10.10.10.204"
+      #config.vm.network "forwarded_port", guest: 80, host: 8081
+      config.vm.provider "virtualbox" do |vb|
+        vb.cpus = "1"
+        vb.memory = "1024"
+      end
+    end
+
+  #config.windows.halt_timeout = 20
+  #config.vm.synced_folder ".", "/vagrant"
+  config.vm.box_download_insecure=true
+end

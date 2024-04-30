@@ -45,8 +45,7 @@ Vagrant.configure("2") do |config|
       end
 
       server2019.windows.halt_timeout = 20
-#      server2019.vm.synced_folder ".", "/vagrant"
-    
+ 
 
     end
 
@@ -62,41 +61,94 @@ Vagrant.configure("2") do |config|
     end
 
 
-    config.vm.define "oracle2" do |oracle2|
-      oracle2.vm.box = "eurolinux-vagrant/oracle-linux-9"
-      oracle2.vm.hostname = "oracle2"
-      oracle2.vm.network "private_network", ip: "10.10.10.202"
-      #config.vm.network "forwarded_port", guest: 80, host: 8081
-      config.vm.provider "virtualbox" do |vb|
-        vb.cpus = "1"
-        vb.memory = "1024"
+    config.vm.define "server2016" do |server2016|
+      server2016.vm.box = "StefanScherer/windows_2016"
+      #server2019.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+      
+      server2016.vm.network "private_network", ip: "10.10.10.210"
+
+      #server2019.vm.guest = :windows
+      #server2016.vm.communicator = "winrm"
+      server2016.vm.communicator = "winrm"
+
+      server2016.winrm.username = "vagrant"
+      server2016.winrm.password = "vagrant"
+
+      server2016.vm.provider "virtualbox" do |vb|
+        #vb.gui = true
+        vb.name = "server2016"
+        vb.cpus = "2"
+        vb.memory = "2048"
+        #vb.customize ["modifyvm", :id, "--vram", 128]
+        #vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        #vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
       end
+
+      server2016.windows.halt_timeout = 20
+ 
+
+    end
+
+    config.vm.define "win10" do |win10|
+      win10.vm.box = "gusztavvargadr/windows-10"
+     # win10.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+      
+      win10.vm.network "private_network", ip: "10.10.10.220"
+
+      win10.vm.guest = :windows
+      win10.vm.communicator = "winrm"
+
+      # Admin user name and password
+      win10.winrm.username = "vagrant"
+      win10.winrm.password = "vagrant"
+
+
+      win10.vm.provider "virtualbox" do |vb|
+        #vb.gui = true
+        vb.name = "win10"
+        vb.cpus = "1"
+        vb.memory = "3072"
+        vb.customize ["modifyvm", :id, "--vram", 128]
+        vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+      end
+
+      win10.windows.halt_timeout = 20
+      win10.vm.synced_folder ".", "/vagrant"
+
     end
 
 
+    config.vm.define "win11" do |win11|
+      win11.vm.box = "gusztavvargadr/windows-11"
+  #    win11.vm.network :forwarded_port, guest: 3389, host: 53389, id: "rdp", auto_correct: true
+      
+      win11.vm.network "private_network", ip: "10.10.10.230"
 
-    config.vm.define "oracle3" do |oracle3|
-      oracle3.vm.box = "eurolinux-vagrant/oracle-linux-8"
-      oracle3.vm.hostname = "oracle3"
-      oracle3.vm.network "private_network", ip: "10.10.10.203"
-      #config.vm.network "forwarded_port", guest: 80, host: 8081
-      config.vm.provider "virtualbox" do |vb|
+      win11.vm.guest = :windows
+
+      win11.vm.communicator = "winrm"
+
+      # Admin user name and password
+      win11.winrm.username = "vagrant"
+      win11.winrm.password = "vagrant"
+
+      win11.vm.provider "virtualbox" do |vb|
+        #vb.gui = true
+        vb.name = "win11"
         vb.cpus = "1"
-        vb.memory = "1024"
+        vb.memory = "2048"
+        vb.customize ["modifyvm", :id, "--vram", 128]
+        vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
       end
+
+      win11.windows.halt_timeout = 20
+      win11.vm.synced_folder ".", "/vagrant"
+
     end
 
 
-    config.vm.define "oracle4" do |oracle4|
-      oracle4.vm.box = "eurolinux-vagrant/oracle-linux-7"
-      oracle4.vm.hostname = "oracle4"
-      oracle4.vm.network "private_network", ip: "10.10.10.204"
-      #config.vm.network "forwarded_port", guest: 80, host: 8081
-      config.vm.provider "virtualbox" do |vb|
-        vb.cpus = "1"
-        vb.memory = "1024"
-      end
-    end
 
   #config.windows.halt_timeout = 20
   #config.vm.synced_folder ".", "/vagrant"
