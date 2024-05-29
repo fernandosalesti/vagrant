@@ -26,7 +26,8 @@ Vagrant.configure("2") do |config|
       oracle1.vm.box = "eurolinux-vagrant/oracle-linux-9"
       oracle1.vm.hostname = "oracle1"
       oracle1.vm.network "private_network", ip: "10.10.10.201"
-      #oracle1.vm.network "forwarded_port", guest: 4440, host: 4440
+      oracle1.vm.network "forwarded_port", guest: 80, host: 8080
+      oracle1.vm.network "forwarded_port", guest: 443, host: 8443
       oracle1.vm.provider "virtualbox" do |vb|
         vb.cpus = "1"
         vb.memory = "2048"
@@ -48,7 +49,7 @@ Vagrant.configure("2") do |config|
       #config.vm.network "forwarded_port", guest: 80, host: 8081
       oracle2.vm.provider "virtualbox" do |vb|
         vb.cpus = "1"
-        vb.memory = "2048"
+        vb.memory = "3072"
       end
     end
 
