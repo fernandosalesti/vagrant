@@ -1,12 +1,18 @@
 # -*- mode: ruby -*-
 Vagrant.configure("2") do |config|
-  config.vm.box = "eurolinux-vagrant/rocky-9"
+  config.vm.box = "generic-x64/rocky9"
   config.vm.hostname = "rocky9"
   config.vm.network "private_network", ip: "10.10.10.229"
   config.vm.network "forwarded_port", guest: 80, host: 8089
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = "1"
     vb.memory = "1024"
+  end
+
+  config.vm.provider "vmware_desktop" do |vb|
+    vb.cpus = "1"
+    vb.memory = "1024"
+    vb.gui = true
   end
 
   #config.vm.provision "shell", path: "script.sh"

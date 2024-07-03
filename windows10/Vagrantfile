@@ -44,6 +44,18 @@ Vagrant.configure("2") do |config|
         vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
       end
 
+      win10.vm.provider "vmware_desktop" do |vb|
+        #vb.gui = true
+        #vb.name = "server2019"
+        vb.vmx["memsize"] = "2048"
+        vb.vmx["numvcpus"] = "2"
+        vb.gui = true
+        #vb.customize ["modifyvm", :id, "--vram", 128]
+        #vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        #vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+      end
+
+
       win10.windows.halt_timeout = 20
       win10.vm.synced_folder ".", "/vagrant"
 
