@@ -9,20 +9,24 @@ curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/miniku
 chmod +x ./minikube
 sudo mv ./minikube /usr/local/bin/minikube
 
-sudo apt update && sudo apt install -y ca-certificates curl apt-transport-https
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt update && sudo apt install -y kubectl
+sudo snap install kubectl --classic
 
-echo "source <(kubectl completion bash)" >> .bashrc 
+#sudo apt update && sudo apt install -y ca-certificates curl apt-transport-https
+#curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+#echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+#sudo apt update && sudo apt install -y kubectl
 
-bash .bashrc
+#echo "source <(kubectl completion bash)" >> .bashrc 
 
-echo 'source <(kubectl completion bash)' >> .bashrc
-source .bashrc
+#bash .bashrc
+
+#echo 'source <(kubectl completion bash)' >> .bashrc
+#source .bashrc
+
+
 # Alguns comandos
 # minikube version
 # minikube start --driver=docker
 # minikube start --driver=docker -p prod --nodes=2
 # minikube delete --all
-# kubectl version
+# kubectl version --client

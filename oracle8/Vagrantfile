@@ -1,18 +1,12 @@
 # -*- mode: ruby -*-
 Vagrant.configure("2") do |config|
-  config.vm.box = "generic-x64/oracle8"
+  config.vm.box = "eurolinux-vagrant/oracle-linux-8"
   config.vm.hostname = "oracle8"
   config.vm.network "private_network", ip: "10.10.10.218"
   #config.vm.network "forwarded_port", guest: 80, host: 8081
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = "1"
     vb.memory = "1024"
-  end
-
-  config.vm.provider "vmware_desktop" do |vb|
-    vb.cpus = "1"
-    vb.memory = "1024"
-    vb.gui = true
   end
 
   #config.vm.provision "shell", path: "script.sh"
