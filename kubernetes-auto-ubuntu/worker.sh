@@ -8,6 +8,8 @@ sudo apt-get update; sudo apt-get install -y kubelet kubeadm
 
 sudo apt-mark hold kubelet kubeadm
 
+kubeadm config images pull
+
 sudo systemctl enable --now kubelet
 
 sudo $(cat /vagrant/ingress.txt)

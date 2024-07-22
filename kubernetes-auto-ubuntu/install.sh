@@ -27,9 +27,11 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o 
 
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-sudo apt-get update && sudo apt-get install -y containerd.io
+sudo apt-get update && sudo apt-get install -y containerd
 
-sudo containerd config default | sudo tee /etc/containerd/config.toml
+sudo mkdir -p /etc/containerd
+
+sudo containerd config default | sudo tee /config.toml
 
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 

@@ -13,7 +13,10 @@ sudo systemctl enable --now kubelet
 kubeadm config images pull
 
 
+#sudo kubeadm init --pod-network-cidr=172.16.32.0/24 --apiserver-advertise-address=10.10.10.100
+
 sudo kubeadm init --pod-network-cidr=172.16.32.0/24 --apiserver-advertise-address=10.10.10.100
+
 
 sudo mkdir -p $HOME/.kube; sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config; sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
@@ -21,7 +24,11 @@ source <(kubectl completion bash)
 
 echo "source <(kubectl completion bash)" >> ~/.bashrc 
 
-sudo kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+#sudo kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
+
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
 
 sudo kubeadm token create --print-join-command > /vagrant/ingress.txt
 
