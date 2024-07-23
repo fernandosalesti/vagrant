@@ -15,11 +15,11 @@ Vagrant.configure("2") do |config|
   # criar VM control
   config.vm.define "control" do |control|
    # SO do box
-    control.vm.box = "almalinux/8"
+    control.vm.box = "eurolinux-vagrant/rocky-9"
    #hostname
     control.vm.hostname = "control"
    # Criar net privada e configurar ip estático
-    control.vm.network "private_network", ip: "10.10.10.11"
+    control.vm.network "private_network", ip: "10.10.10.10"
    # NAT com encaminhamento de portas
    #server1.vm.network "forwarded_port", guest: 80, host: 8081
    # Executar arquivo script-alma8.sh
@@ -28,22 +28,31 @@ Vagrant.configure("2") do |config|
   
   # criar VM worker01
   config.vm.define "worker01" do |worker01|
-    worker01.vm.box = "almalinux/8"
+    worker01.vm.box = "eurolinux-vagrant/rocky-9"
     worker01.vm.hostname = "worker01"
-    worker01.vm.network "private_network", ip: "10.10.10.12"
+    worker01.vm.network "private_network", ip: "10.10.10.11"
    # Executar comandos após o inline
    #server2.vm.provision "shell", inline: "sudo yum install -y nginx; sudo setenforce 0; sudo systemctl enable --now nginx"
   end 
   
   # criar VM worker02
   #config.vm.define "worker02" do |worker02|
-  #  worker02.vm.box = "almalinux/8"
+  #  worker02.vm.box = "ubuntu/jammy64"
   #  worker02.vm.hostname = "worker02"
   #  worker02.vm.network "private_network", ip: "10.10.10.13"
     #server3.vm.network "forwarded_port", guest: 80, host: 8083
     # Executar comandos da variavel $script
     #server3.vm.provision "shell", inline: $script
   #end 
+
+  config.vm.define "worker02" do |worker02|
+    worker02.vm.box = "eurolinux-vagrant/rocky-9"
+    worker02.vm.hostname = "worker02"
+    worker02.vm.network "private_network", ip: "10.10.10.12"
+   # Executar comandos após o inline
+   #server2.vm.provision "shell", inline: "sudo yum install -y nginx; sudo setenforce 0; sudo systemctl enable --now nginx"
+  end 
+  
 
 
   config.vm.provider "virtualbox" do |vb|
