@@ -24,6 +24,11 @@ Vagrant.configure("2") do |config|
    #server1.vm.network "forwarded_port", guest: 80, host: 8081
    # Executar arquivo script-alma8.sh
    #server1.vm.provision "shell", path: "script-alma8.sh"
+
+    control.vm.provider "virtualbox" do |vb|
+      vb.cpus = "2"
+      vb.memory = "3158"
+    end
   end 
   
   # criar VM worker01
@@ -33,6 +38,10 @@ Vagrant.configure("2") do |config|
     worker01.vm.network "private_network", ip: "10.10.10.11"
    # Executar comandos após o inline
    #server2.vm.provision "shell", inline: "sudo yum install -y nginx; sudo setenforce 0; sudo systemctl enable --now nginx"
+    worker01.vm.provider "virtualbox" do |vb|
+      vb.cpus = "1"
+      vb.memory = "2048"
+    end
   end 
   
   # criar VM worker02
@@ -51,14 +60,19 @@ Vagrant.configure("2") do |config|
     worker02.vm.network "private_network", ip: "10.10.10.12"
    # Executar comandos após o inline
    #server2.vm.provision "shell", inline: "sudo yum install -y nginx; sudo setenforce 0; sudo systemctl enable --now nginx"
+    worker02.vm.provider "virtualbox" do |vb|
+      vb.cpus = "1"
+      vb.memory = "2048"
+    end
+
   end 
   
 
 
-  config.vm.provider "virtualbox" do |vb|
-    vb.cpus = "2"
-    vb.memory = "2048"
-  end
+#  config.vm.provider "virtualbox" do |vb|
+#    vb.cpus = "2"
+#    vb.memory = "3158"
+#  end
 
   
  #config.vm.synced_folder "web/", "/var/www/html/"
